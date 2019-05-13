@@ -7,54 +7,62 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
+    <link rel="stylesheet" type="text/css" href="page2css.css">.
+    <title>Page2 - Trivia</title>
   </head>
   <body>
     <div id="Questions"></div>
-    <button>Submit</button>
-    <!-- <div class="TriviaQuestion" id="TriviaQuestion">
-      <h1>Question1</h1>
-      <label class="RadioLabel" id="Radio1">
-        <input type="radio"><span id="Label1text">text</span>
-      </label>
-    </div> -->
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <button onclick="submit()" >Submit</button>
+    
     <script
         src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
+      var questions =[];
+      var selected =['','',''];
+      function test(e){
+        console.log(e);
+        let index=(e.id.replace(/[^\d]/g, ''));
+        for(i=0;i<4;i++){
+          $("#Radio"+index[0]+i).removeClass("clicked");
+        }
+        $(e).toggleClass('clicked');
+        selected[index[0]]=$(e).text().trim();
+      }
+      function submit(){
+        for(let i=0;i<selected.length;i++){
+          if(selected[i]!=$.parseHTML(questions[i].correct_answer)[0].textContent){
+            alert("Incorrect! correct answer for question " + (i+1) + " is:"+$.parseHTML(questions[i].correct_answer)[0].textContent);
+            console.log(selected[i],questions[i].correct_answer);
+            return;
+          }
+        }
+        window.location.replace("page2.html");
+      }
       $.get("https://opentdb.com/api.php?amount=3&category=31&difficulty=easy&type=multiple",(e)=>{
         console.log(e);
         for(let i=0;i<3;i++){
-          console.log(e.results[i].question);
+          questions.push(e.results[i]);
           $("#Questions").append(
-            "<h1>Question:"+(i+1)+')</h1>'+e.results[i].question
+            "<h1>Question "+(i+1)+'</h1>'+e.results[i].question
           );
-          let questions = [];
+          let answers = [];
           for(let j=0;j<e.results[i].incorrect_answers.length;j++){
-            questions.push(e.results[i].incorrect_answers[j]);
+            answers.push(e.results[i].incorrect_answers[j]);
           }
-          questions.push(e.results[i].correct_answer);
-          for(let j=0;j<questions.length;j++){
+          answers.push(e.results[i].correct_answer);
+          for(let j=0;j<answers.length;j++){
             $("#Questions").append(`
             </br>
-            <label class="RadioLabel" id="Radio`+i.toString()+j.toString()+`">
-              <input type="radio"><span id="Label1text">`+questions[j]+`</span>
+            <label class="RadioLabel" id="Radio`+i.toString()+j.toString()+`" onchange="test(this)">
+              <input type="radio" name="radio`+i+`" style="display:none;"><span id="Label1text">`+answers[j]+`</span>
             </label>
-            `
-          );
+            `);
           }
         }
-        document.getElementById("Tri")
       });
-    </script>
     </script>
 </body>
 </html>

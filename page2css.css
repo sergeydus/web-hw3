@@ -1,0 +1,18 @@
+.RadioLabel{
+    background:rgb(0, 238, 255);
+    color: black;
+    border-radius: 5px;
+    width: 80vh;
+    
+}
+.clicked{
+    background:rgba(2, 53, 53, 0.644);
+    color: white
+}
+body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    background: rgb(240, 199, 87);
+}
