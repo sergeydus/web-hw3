@@ -1,0 +1,28 @@
+<html>
+<head>
+        <link rel="stylesheet" type="text/css" href="JokePage.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body bgcolor="#B9AEC8"><!--background color-->
+     <center><h1><i>Showing Random Joke</i></h1></center><!--Title-->
+
+<div id="joke"></div>
+    <div class="center">      
+        <script class="center">
+             $(document).ready(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "https://api.icndb.com/jokes/random?firstName=Moti&lastName=Banana",//put here the user name
+                    dataType: "json",                                                        //replace the firstName in the user name and the last name in the same.
+                    success: function (msg) {
+                        $("#joke").html(msg.value.joke);
+                    },
+                    error: function (req, status, error) {
+                         alert(req + " " + status + " " + error);
+                     }
+                });
+            });
+        </script>
+    </div>  
+</body>
+</html>
