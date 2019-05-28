@@ -9,10 +9,13 @@
 <div id="joke"></div>
     <div class="center">      
         <script class="center">
+            let name=localStorage.getItem("name");
+            let lastname=localStorage.getItem("lastname");
+
              $(document).ready(function() {
                 $.ajax({
                     type: "GET",
-                    url: "https://api.icndb.com/jokes/random?firstName=Moti&lastName=Banana",//put here the user name
+                    url: "https://api.icndb.com/jokes/random?firstName="+name+"&lastName="+lastname,//put here the user name
                     dataType: "json",                                                        //replace the firstName in the user name and the last name in the same.
                     success: function (msg) {
                         $("#joke").html(msg.value.joke);
