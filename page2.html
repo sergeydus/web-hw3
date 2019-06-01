@@ -7,12 +7,15 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="page2css.css">.
+    <link rel="stylesheet" type="text/css" href="page2css.css">
     <title>Page2 - Trivia</title>
   </head>
   <body>
-    <div id="Questions"></div>
-    <button onclick="submit()" >Submit</button>
+    <div id="Questions">
+      Loading!...<br>
+      <img src="gifs/loading.svg" title="loading" />
+    </div>
+    <button style="visibility: hidden" id="submitbutton" onclick="submit()" >Submit</button>
     
     <script
         src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -39,29 +42,40 @@
             return;
           }
         }
-        window.location.replace("JokePage.html");
+        window.location.href="JokePage.html";
       }
-      $.get("https://opentdb.com/api.php?amount=3&category=31&difficulty=easy&type=multiple",(e)=>{
-        console.log(e);
-        for(let i=0;i<3;i++){
-          questions.push(e.results[i]);
-          $("#Questions").append(
-            "<h1>Question "+(i+1)+'</h1>'+e.results[i].question
-          );
-          let answers = [];
-          for(let j=0;j<e.results[i].incorrect_answers.length;j++){
-            answers.push(e.results[i].incorrect_answers[j]);
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+      }
+      $( document ).ready(function() {
+        $.get("https://opentdb.com/api.php?amount=3&category=31&difficulty=easy&type=multiple",(e)=>{
+          $("#Questions").empty();
+          console.log(e);
+          for(let i=0;i<3;i++){
+            questions.push(e.results[i]);
+            $("#Questions").append(
+              "<h1>Question "+(i+1)+'</h1>'+e.results[i].question
+            );
+            let answers = [];
+            let answerposition=getRandomInt(4);//returns a number between 0 and 3, this number will be the index with the correct
+            for(let j=0;j<e.results[i].incorrect_answers.length;j++){
+              answers.push(e.results[i].incorrect_answers[j]);
+            }
+            answers.push(e.results[i].correct_answer);
+            let temp=answers[answerposition];
+            answers[answerposition]=answers[answers.length-1];
+            answers[answers.length-1]=temp;
+            for(let j=0;j<answers.length;j++){
+              $("#Questions").append(`
+              </br>
+              <label class="RadioLabel" id="Radio`+i.toString()+j.toString()+`" onchange="test(this)">
+                <input type="radio" name="radio`+i+`" style="display:none;"><span id="Label1text">`+answers[j]+`</span>
+              </label>
+              `);
+            }
           }
-          answers.push(e.results[i].correct_answer);
-          for(let j=0;j<answers.length;j++){
-            $("#Questions").append(`
-            </br>
-            <label class="RadioLabel" id="Radio`+i.toString()+j.toString()+`" onchange="test(this)">
-              <input type="radio" name="radio`+i+`" style="display:none;"><span id="Label1text">`+answers[j]+`</span>
-            </label>
-            `);
-          }
-        }
+          $("#submitbutton").css("visibility","visible")
+        });
       });
     </script>
 </body>
